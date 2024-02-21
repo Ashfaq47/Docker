@@ -1,7 +1,7 @@
-FROM mcr.microsoft.com/dotnet/sdk:7.0
-LABEL author="Ashfaque" project="nopcommerce"
-RUN mkdir /nopcommerce
+FROM mcr.microsoft.com/dotnet/runtime:7.0
+LABEL author="Ashfaque" project="NopCommerce"
+ENV ASPNETCORE_URLS="http://0.0.0.0:5000"
 COPY nopcommerce /nopcommerce
-EXPOSE 5000
 WORKDIR /nopcommerce
-CMD [ "dotnet","Nop.Web.dll","--urls="http:/0.0.0.0/5000"" ]
+EXPOSE 5000
+CMD [ "dotnet","Nop.Web.dll" ]
