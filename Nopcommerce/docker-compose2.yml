@@ -1,0 +1,33 @@
+---
+version: '3.8'
+services:
+  nop:
+    build: .
+    networks:
+      - nop-net
+    ports:
+      - 32000:5000
+    depends_on:
+      - nop-db
+
+  nop-db:
+    image: mysql:8
+    environment:
+      - MYSQL_ROOT_PASSWORD=nop123
+      - MYSQL_DATABASE=nop
+      - MYSQL_USER=nop
+      - MYSQL_PASSWORD=nop123
+    networks:
+      - nop-net
+    volumes:
+      - nop-vol:/var/lib/mysql
+    
+
+volumes:
+  nop-vol:
+networks:
+  nop-net:
+    ipam:
+      driver: default
+      config:
+        - subnet: "10.100.0.0/16"
