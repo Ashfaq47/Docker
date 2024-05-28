@@ -1,0 +1,12 @@
+FROM alpine:3 AS downloader
+ADD https://github.com/nopSolutions/nopCommerce/releases/download/release-4.70.0/nopCommerce_4.70.0_NoSource_linux_x64.zip  /nop/nopCommerce_4.70.0_NoSource_linux_x64.zip
+RUN apk update && apk add unzip && cd nop && unzip nopCommerce_4.70.0_NoSource_linux_x64.zip && rm nopCommerce_4.70.0_NoSource_linux_x64.zip && mkdir logs bin
+
+FROM mcr.microsoft.com/dotnet/sdk:7.0
+LABEL author="Ashfaque" project="nop"
+ENV ASPNETCORE_URLS="http://0.0.0.0:5000"
+COPY --from=downloader /nop /nop
+WORKDIR /nop
+EXPOSE 5000
+CMD ["dotnet","Nop.Web.dll"]
+

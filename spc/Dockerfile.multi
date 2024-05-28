@@ -1,0 +1,14 @@
+FROM maven:3-amazoncorretto-17 AS builder
+COPY . /springpetclinic
+RUN cd /springpetclinic && mvn package
+
+FROM amazoncorretto:17-alpine3.18-jdk
+LABEL author="Ashfaq" project="springpetclinic"
+ARG HOMEDIR="/springpetclinic"
+ARG USERNAME="springpetclinic"
+RUN adduser -h ${HOMEDIR} -s /bin/bash -D ${USERNAME}
+COPY --from=builder --chown=${USERNAME}:${USERNAME} /springpetclinic/target/spring-petclinic-*.jar ${HOMEDIR}/spring-petclinic-*.jar
+USER ${USERNAME}
+WORKDIR ${HOMEDIR}
+EXPOSE 8080
+CMD [ "java", "-jar", "spring-petclinic-*.jar" ]
